@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <title>{% block title %}{% endblock %}</title>
+        <link rel="stylesheet" href="{{ asset('build/style.css') }}">
+    </head>
+    <body>
+
+        {% block body %}{% endblock %}
+
+        <script src="{{ asset('build/app.js') }}"></script>
+        {# Incluyo por CDN jquery. Debo tener algun problema webpack. #}
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+        {% block javascripts %}{% endblock %}
+    </body>
+</html>

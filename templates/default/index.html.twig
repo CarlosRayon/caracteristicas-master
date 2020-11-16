@@ -1,0 +1,92 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Buscador de personas{% endblock %}
+
+{% block body %}
+
+   <main class="container">
+        <header class="row">
+            <div class="col">
+                <h1 class="text-center mt-2">
+                    Buscador de persona
+                </h1>
+            </div>
+        </header>
+
+        <section class="row">
+            <div class="col">
+                <form>
+                    <div class="form-group">
+                        <label for="search">Introducir caracteristica</label>
+                        <input type="text" class="form-control" id="search" aria-describedby="searchHelp">
+                        <small id="searchHelp" name="search" class="form-text text-muted">Busqueda activa con cada pulsación</small>
+                    </div>
+                </form>
+            </div>
+        </section>
+
+        <section class="row">
+            <div class="col">
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th scope="col">Nombre</th>
+                            <th scope="col">Caracteristica</th>
+                            <th scope="col">Valor de la caracteristica</th>
+                        </tr>
+                    </thead>
+                    <tbody class="table__body">
+                     {# js completed #}
+                    </tbody>
+                </table>
+            </div>
+        </section>
+    </main>
+{% endblock %}
+
+{% block javascripts %}
+<script>
+  $(function () { /* DOM Cargado completamente.*/
+            'use strict';
+
+            const $search = $('#search');
+            const $tableBody = $('.table__body');
+
+            $search.on('keyup', () => {
+
+                /* Evito la llamada ajax si no tenemo valor introduccido */
+                if (!$search.val()) {
+                    $tableBody.empty();
+                } else {
+
+                        $.ajax({
+                            type: 'POST',
+                            url: '/ajax_get_features',
+                            data: {
+                                request: $search.val()
+                            },
+                            dataType: 'json',
+                        })
+                        .done(function (response) {
+                            console.log(response);
+
+                            $tableBody.empty();
+                            response.forEach((feature) => {
+                            $tableBody.append(`
+                                            <tr>
+                                                <td>${feature.name}</td>
+                                                <td>${feature.feature}</td>
+                                                <td>${feature.feature_info}</td>
+                                            <tr>
+                                              `);
+                            });
+                        })
+                        .fail(function (xhr, status, error) {
+                            console.log(xhr + '\n' + status + '\n' + '\n' + error);
+                        });
+                }
+            });
+        });
+</script>
+
+{% endblock %}
